@@ -2,32 +2,28 @@ from demo.pokemon import Pokemon
 
 
 class Trainer:
-    def __init__(self, name: str):
+    def __init__(self, name):
         self.name = name
-        self.pokemon = []
+        self.pokemons = []
 
     def add_pokemon(self, pokemon: Pokemon):
-        if pokemon in self.pokemon:
+        if any([p for p in self.pokemons if p.name == pokemon.name]):
             return f'This pokemon is already caught'
-        self.pokemon.append(pokemon)
+        self.pokemons.append(pokemon)
         return f'Caught {pokemon.pokemon_details()}'
 
     def release_pokemon(self, pokemon_name: str):
-        pokemon_names = [p.name for p in self.pokemon]
-        if pokemon_name not in pokemon_names:
-            return f'Pokemon is not caught'
-        del self.pokemon[pokemon_name.index(pokemon_name)]
-        return f'You have released {pokemon_name}'
+        for p in self.pokemons:
+            if p.name == pokemon_name:
+                self.pokemons.remove(p)
+                return f'You have released {pokemon_name}'
+        return 'Pokemon is not caught'
 
     def trainer_data(self):
-        trainer_info = [
-            f'Pokemon Trainer {self.name}',
-            f'Pokemon count {len(self.pokemon)}',
-        ]
-        pokemon_info = [f'- {p.pokemon_details()}' for p in self.pokemon]
-        return "\n".join(trainer_info + pokemon_info) + '\n'
-
-
+        data = f"Pokemon Trainer {self.name}\nPokemon count {len(self.pokemons)}\n"
+        for p in self.pokemons:
+            data += f"- {p.pokemon_details()}\n"
+        return data
 
 
 
